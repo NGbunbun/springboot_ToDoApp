@@ -34,11 +34,15 @@ public class TodoSecurityCinfig {
 	@Bean
 	public UserDetailsManager userDetailsManager() {
 		return new JdbcUserDetailsManager(this.dataSource);
+		
+		// 初回起動時[user]というアカウントを作成、
+		// またはアカウントを追加したい場合下記コードを実行
 //		JdbcUserDetailsManager users = new JdbcUserDetailsManager(this.dataSource);
 //		users.createUser(makeUser("user", "pass", "USER"));
 //		return users;
 	}
 	
+	// アカウント作成用メソッド
 //	private UserDetails makeUser(String name, String pass, String role) {
 //		return User.withUsername(name)
 //				.password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(pass))
