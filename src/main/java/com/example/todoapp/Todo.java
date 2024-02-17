@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -45,9 +46,10 @@ public class Todo {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate created;
 	
-//	期日（値は必須ではない）
+//	期日（値は必須ではない、値は現在以降に限定する）
 	@Column(nullable = true)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@FutureOrPresent(message = "値は現在、または未来の日付にしてください。")
 	private LocalDate deadline;
 
 	
