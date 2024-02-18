@@ -1,6 +1,5 @@
 package com.example.todoapp;
 
-
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,40 +18,39 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "todo")
 public class Todo {
-	
+
 	// フィールド
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
 	@NotNull
 	private long id;
-	
-//	投稿したusername
+
+	//	投稿したusername
 	@Column(nullable = false)
 	private String username;
-	
-//	投稿内容
+
+	//	投稿内容
 	@Column(length = 50, nullable = false)
 	@Size(max = 50, message = "50字以内で入力してください。")
 	@NotBlank(message = "内容は必須です。")
 	private String content;
-	
-//	完了状態
+
+	//	完了状態
 	@Column(nullable = false)
 	private boolean done;
-	
-//	作成日
+
+	//	作成日
 	@Column(nullable = false)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate created;
-	
-//	期日（値は必須ではない、値は現在以降に限定する）
+
+	//	期日（値は必須ではない、値は現在以降に限定する）
 	@Column(nullable = true)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@FutureOrPresent(message = "値は現在、または未来の日付にしてください。")
 	private LocalDate deadline;
 
-	
 	// 以下アクセサー
 	public long getId() {
 		return id;
@@ -101,5 +99,5 @@ public class Todo {
 	public void setDeadline(LocalDate deadline) {
 		this.deadline = deadline;
 	}
-		
+
 }
