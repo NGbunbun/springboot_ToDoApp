@@ -23,7 +23,7 @@
 		<!-- 全ユーザーTODO一覧表示 -->
 		<h2 class="fw-bold mt-5" th:text="${msg}"></h2>
 		<p class="fw-bold text-decoration-underline caution">
-			※赤く表示されているTODOは期日が現時点(<span th:text="${dayOfNow}"></span>)より7日以内のものです
+			※赤く表示されているTODOは期日が現時点(<span th:text="${today}"></span>)より7日以内のものです
 		</p>
 		<table class="table">
 			<thead>
@@ -38,12 +38,12 @@
 			</thead>
 			<tbody>
 				<tr th:each="item, status : ${data}">
-					<td th:text="${status.count}" th:class="${deadlineFlagLists[status.index]} ? 'nearbyDeadlines' : ''"></td>
-					<td th:text="${item.username}" th:class="${deadlineFlagLists[status.index]} ? 'nearbyDeadlines' : ''"></td>
-					<td th:text="${item.done} ? '完了' : '未完了'" th:class="${deadlineFlagLists[status.index]} ? 'nearbyDeadlines' : ''"></td>
-					<td th:text="${item.content}" th:class="${deadlineFlagLists[status.index]} ? 'nearbyDeadlines' : ''"></td>
-					<td th:text="${item.created}" th:class="${deadlineFlagLists[status.index]} ? 'nearbyDeadlines' : ''"></td>
-					<td th:text="${item.deadline}" th:class="${deadlineFlagLists[status.index]} ? 'nearbyDeadlines' : ''"></td>
+					<td th:text="${status.count}" th:class="${deadlineFlagList[status.index]} ? 'nearbyDeadlines' : ''"></td>
+					<td th:text="${item.username}" th:class="${deadlineFlagList[status.index]} ? 'nearbyDeadlines' : ''"></td>
+					<td th:text="${item.done} ? '完了' : '未完了'" th:class="${deadlineFlagList[status.index]} ? 'nearbyDeadlines' : ''"></td>
+					<td th:text="${item.content}" th:class="${deadlineFlagList[status.index]} ? 'nearbyDeadlines' : ''"></td>
+					<td th:text="${item.created}" th:class="${deadlineFlagList[status.index]} ? 'nearbyDeadlines' : ''"></td>
+					<td th:text="${item.deadline}" th:class="${deadlineFlagList[status.index]} ? 'nearbyDeadlines' : ''"></td>
 				</tr>
 			</tbody>
 		</table>

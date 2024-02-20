@@ -45,9 +45,9 @@ public class AuthenticatedUserController {
 		mav.addObject("data", data);
 		
 		// 期日が閲覧時点より7日以内かつ未完了のTODOは赤色に表示させる
-		List<Boolean> deadlineFlagLists = isNearDeadlineList(data);
-		mav.addObject("deadlineFlagLists", deadlineFlagLists);
-		mav.addObject("dayOfNow", LocalDate.now());
+		List<Boolean> deadlineFlagList = isNearDeadlineList(data);
+		mav.addObject("deadlineFlagList", deadlineFlagList);
+		mav.addObject("today", LocalDate.now());
 		
 		return mav;
 	}
@@ -70,9 +70,9 @@ public class AuthenticatedUserController {
 			mav.addObject("name", username + " さんのTODO一覧");
 			mav.addObject("data", data);
 			
-			List<Boolean> deadlineFlagLists = isNearDeadlineList(data);
-			mav.addObject("deadlineFlagLists", deadlineFlagLists);
-			mav.addObject("dayOfNow", LocalDate.now());
+			List<Boolean> deadlineFlagList = isNearDeadlineList(data);
+			mav.addObject("deadlineFlagList", deadlineFlagList);
+			mav.addObject("today", LocalDate.now());
 			
 			return mav;
 		}
@@ -92,25 +92,25 @@ public class AuthenticatedUserController {
 		List<Todo> data = repository.findAll();
 		mav.addObject("data", data);
 		
-		List<Boolean> deadlineFlagLists = isNearDeadlineList(data);
-		mav.addObject("deadlineFlagLists", deadlineFlagLists);
-		mav.addObject("dayOfNow", LocalDate.now());
+		List<Boolean> deadlineFlagList = isNearDeadlineList(data);
+		mav.addObject("deadlineFlagList", deadlineFlagList);
+		mav.addObject("today", LocalDate.now());
 		
 		return mav;
 	}
 	
 	// 各オブジェクトに設定されている期日が現時点より7日以内かつ未完了状態か判定する
 	private List<Boolean> isNearDeadlineList(List<Todo> dataLists) {
-		int dayOfNow = LocalDate.now().getDayOfYear();
+		LocalDate notifyDate = LocalDate.now().plusDays(7);
 		List<Boolean> isNearDeadlineList = new ArrayList<>();
 		
 		for(Todo list : dataLists) {
 			boolean isNearDeadline = false;
 			
 			if(list.getDeadline() != null) {
-				int dayOfDeadline = list.getDeadline().getDayOfYear();
+				LocalDate dateOfDeadline = list.getDeadline();
 				
-				if(dayOfDeadline - dayOfNow <= 7 && !list.isDone()) {
+				if(dateOfDeadline.isBefore(notifyDate) && !list.isDone()) {
 					isNearDeadline = true;
 				}
 			}
@@ -121,23 +121,3 @@ public class AuthenticatedUserController {
 		return isNearDeadlineList;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
