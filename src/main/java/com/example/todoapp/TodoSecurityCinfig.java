@@ -39,6 +39,7 @@ public class TodoSecurityCinfig {
 		// またはアカウントを追加したい場合下記コードを実行
 //		JdbcUserDetailsManager users = new JdbcUserDetailsManager(this.dataSource);
 //		users.createUser(makeUser("user", "pass", "USER"));
+//		users.createUser(makeUser("Taro", "asou", "ADMIN"));
 //		return users;
 	}
 	

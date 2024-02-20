@@ -1,15 +1,13 @@
 package com.example.todoapp;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Collection;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,9 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class TodoController {
-	
-	@Autowired
-	TodoService todoService;
 	
 	@GetMapping("/")
 	@PreAuthorize("permitAll")
@@ -33,12 +28,18 @@ public class TodoController {
 	@GetMapping("/secret")
 	@PreAuthorize("isAuthenticated()")
 	public ModelAndView secret(ModelAndView mav, HttpServletRequest request) {
-		String user = request.getRemoteUser();
-		String msg = "ようこそ \"" + user + "\" さん！";
+		// ログイン中のユーザー名、ユーザー権限を取得
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		Collection<? extends GrantedAuthority > authorities =  authentication.getAuthorities();
+		// 取得したユーザー権限によりテンプレートファイルの表示を切り替える
+		String roleName = authorities.toString();
+		boolean isAdmin = roleName.equals("[ROLE_ADMIN]");
 		
 		mav.setViewName("secret");
 		mav.addObject("title", "MEMBERS ONLY PAGE");
-		mav.addObject("msg", msg);
+		mav.addObject("msg", "ようこそ \"" + username + "\" さん！");
+		mav.addObject("isAdmin", isAdmin);
 		return mav;
 	}
 	
@@ -54,38 +55,6 @@ public class TodoController {
 		}
 		
 		return mav;
-	}
-	
-	@GetMapping("/todo/create")
-	@PreAuthorize("isAuthenticated()")
-	public ModelAndView create(ModelAndView mav, @ModelAttribute Todo todoItem) {
-		mav.setViewName("todo/create");
-		mav.addObject("title", "TODO管理ページ");
-		mav.addObject("msg", "TODO編集");
-		mav.addObject("formModel", todoItem);
-		return mav;
-	}
-	
-	@PostMapping("/todo/create")
-	@PreAuthorize("isAuthenticated()")
-	public ModelAndView createForm(ModelAndView mav, @ModelAttribute("formModel") @Validated Todo todoItem, BindingResult result) {
-		if(result.hasErrors()) {
-			System.out.println("Validation errors: " + result.getAllErrors());
-			
-			mav.setViewName("todo/create");
-			mav.addObject("title", "TODO管理ページ");
-			mav.addObject("msg", "※入力内容に誤りがあります。");
-			mav.addObject("formModel", todoItem);
-			return mav;
-		}
-		
-		// ログイン中のユーザー情報を取得
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
-		
-		todoService.create(username, todoItem);
-		return new ModelAndView("redirect:/todo/create");
-		
 	}
 }
 
