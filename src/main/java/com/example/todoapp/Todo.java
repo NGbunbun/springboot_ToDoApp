@@ -99,5 +99,15 @@ public class Todo {
 	public void setDeadline(LocalDate deadline) {
 		this.deadline = deadline;
 	}
+	
+	@Override
+	public String toString() {
+		return  "ID： " + this.getId() + "\n" +
+				"名前： " + this.getUsername() + "\n" +
+				"TODO； " + this.getContent() + "\n" +
+				"完了状態： " + this.isDone() + "\n" +
+				"作成日： " + this.getCreated() + "\n" +
+				"期日： " + this.getDeadline();
+	}
 
 }

@@ -24,5 +24,12 @@ public class TodoService {
 		repository.saveAndFlush(item);
 		return item;
 	}
+	
+	// ToDo更新機能
+	public void update(Todo originalData, Todo newData) {
+		originalData.setContent(newData.getContent());
+		originalData.setDeadline(newData.getDeadline());
+		repository.saveAndFlush(originalData);
+	}
 
 }

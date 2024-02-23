@@ -3,6 +3,7 @@ package com.example.todoapp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -78,6 +80,34 @@ public class AuthenticatedUserController {
 		}
 		
 		todoService.create(username, todoItem);
+		
+		return new ModelAndView("redirect:/todo/create");
+	}
+	
+	@GetMapping("/edit/{id}")
+	@PreAuthorize("isAuthenticated()")
+	public ModelAndView edit(ModelAndView mav, @PathVariable int id) {
+		mav.setViewName("todo/edit");
+		mav.addObject("title", "TODO更新ページ");
+		Optional<Todo> data = repository.findById((long)id);
+		mav.addObject("formModel", data.get());
+		return mav;
+	}
+	
+	@PostMapping("/edit")
+	@PreAuthorize("isAuthenticated()")
+	public ModelAndView update(ModelAndView mav, @ModelAttribute("formModel") @Validated Todo todoItem, BindingResult result) {
+		if(result.hasErrors()) {
+			mav.setViewName("todo/edit");
+			mav.addObject("title", "TODO更新ページ");
+			mav.addObject("formModel", todoItem);
+			return mav;
+		}
+		
+		Optional<Todo> data = repository.findById(todoItem.getId());
+		Todo originalData = data.get();
+		
+		todoService.update(originalData, todoItem);
 		
 		return new ModelAndView("redirect:/todo/create");
 	}
