@@ -87,9 +87,19 @@ public class AuthenticatedUserController {
 	@GetMapping("/edit/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public ModelAndView edit(ModelAndView mav, @PathVariable int id) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String loggedInUser = authentication.getName();		// ログイン中のユーザー名
+		
+		Optional<Todo> data = repository.findById((long)id);
+		String todoCreateUser = data.get().getUsername();	// TODO作成者のユーザー名
+		
+		// ログイン中のユーザー名と、TODO作成者の名前が一致しないとTOPページへリダイレクトする
+		if(!loggedInUser.equals(todoCreateUser)) {
+			return new ModelAndView("redirect:/");
+		}
+		
 		mav.setViewName("todo/edit");
 		mav.addObject("title", "TODO更新ページ");
-		Optional<Todo> data = repository.findById((long)id);
 		mav.addObject("formModel", data.get());
 		return mav;
 	}
