@@ -31,5 +31,10 @@ public class TodoService {
 		originalData.setDeadline(newData.getDeadline());
 		repository.saveAndFlush(originalData);
 	}
+	
+	// ToDo削除機能
+	public void delete(long id) {
+		repository.deleteById(id);
+	}
 
 }

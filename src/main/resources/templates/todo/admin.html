@@ -34,6 +34,7 @@
 					<th>TODO</th>
 					<th>作成日</th>
 					<th>期日</th>
+					<th>削除</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -44,6 +45,7 @@
 					<td th:text="${item.content}" th:class="${deadlineFlagList[status.index]} ? 'nearbyDeadlines' : ''"></td>
 					<td th:text="${item.created}" th:class="${deadlineFlagList[status.index]} ? 'nearbyDeadlines' : ''"></td>
 					<td th:text="${item.deadline}" th:class="${deadlineFlagList[status.index]} ? 'nearbyDeadlines' : ''"></td>
+					<td><a th:href="@{/todo/delete/{id}(id = ${item.id})}">削除する</a></td>
 				</tr>
 			</tbody>
 		</table>
