@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.todoapp.repositories.TodoRepository;
@@ -120,6 +121,26 @@ public class AuthenticatedUserController {
 		todoService.update(originalData, todoItem);
 		
 		return new ModelAndView("redirect:/todo/create");
+	}
+	
+	@GetMapping("/delete/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ModelAndView delete(ModelAndView mav, @PathVariable int id) {
+		mav.setViewName("todo/delete");
+		mav.addObject("title", "TODO削除ページ");
+		mav.addObject("msg", "こちらのTODOを削除してもよろしいでしょうか？");
+		
+		Optional<Todo> data = repository.findById((long)id);
+		mav.addObject("formModel", data.get());
+		
+		return mav;
+	}
+	
+	@PostMapping("/delete")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ModelAndView remove(ModelAndView mav, @RequestParam long id) {
+		todoService.delete(id);
+		return new ModelAndView("redirect:/todo/admin");
 	}
 	
 	@GetMapping("/admin")
