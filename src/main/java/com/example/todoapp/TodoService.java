@@ -29,6 +29,7 @@ public class TodoService {
 	public void update(Todo originalData, Todo newData) {
 		originalData.setContent(newData.getContent());
 		originalData.setDeadline(newData.getDeadline());
+		originalData.setDone(newData.isDone());
 		repository.saveAndFlush(originalData);
 	}
 	

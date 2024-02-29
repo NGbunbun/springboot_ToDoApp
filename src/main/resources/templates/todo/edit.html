@@ -32,6 +32,12 @@
 				<p th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}" th:errorclass="err"></p>
 			</div>
 			
+			<div class="mb-4">
+				<label class="form-label" for="isDone">完了にする</label>
+				<input class="form-check-input" type="checkbox" id="isDone" name="done" th:checked="*{done}">
+				<p th:if="${#fields.hasErrors('done')}" th:errors="*{done}" th:errorclass="err"></p>
+			</div>
+			
 			<input type="submit" class="btn btn-primary mx-4" value="更新する">
 			<span><a th:href="@{/todo/create}">戻る</a></span>
 		</form>
